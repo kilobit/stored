@@ -24,10 +24,10 @@ type ItemHandler func(ID, Storable) error
 //
 type Store interface {
 	StoreItem(ID, Storable) error
-	Retrieve(ID, Storable) (Storable, error)
-	List() []ID
-	Apply(ItemHandler, Storable) error
-	Delete(ID)
+	Retrieve(ID) (Storable, error)
+	List() ([]ID, error)
+	Apply(ItemHandler) error
+	Delete(ID) error
 }
 
 // An in-memory map based store.
@@ -46,7 +46,7 @@ func (s MapStore) StoreItem(id ID, obj Storable) error {
 	return nil
 }
 
-func (s MapStore) Retrieve(id ID, dst Storable) (Storable, error) {
+func (s MapStore) Retrieve(id ID) (Storable, error) {
 
 	dst, ok := s[id]
 	if !ok {
@@ -56,7 +56,7 @@ func (s MapStore) Retrieve(id ID, dst Storable) (Storable, error) {
 	return dst, nil
 }
 
-func (s MapStore) List() []ID {
+func (s MapStore) List() ([]ID, error) {
 
 	ids := []ID{}
 
@@ -64,10 +64,10 @@ func (s MapStore) List() []ID {
 		ids = append(ids, id)
 	}
 
-	return ids
+	return ids, nil
 }
 
-func (s MapStore) Apply(f ItemHandler, dst Storable) error {
+func (s MapStore) Apply(f ItemHandler) error {
 	for id, dst := range s {
 		err := f(id, dst)
 		if err != nil {
@@ -78,6 +78,7 @@ func (s MapStore) Apply(f ItemHandler, dst Storable) error {
 	return nil
 }
 
-func (s MapStore) Delete(id ID) {
+func (s MapStore) Delete(id ID) error {
 	delete(s, id)
+	return nil
 }

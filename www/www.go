@@ -208,7 +208,7 @@ func (ds DataServer) RetrData(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	obj, err := ds.store.Retrieve((stored.ID)(id), "") // Probably a runtime error!!
+	obj, err := ds.store.Retrieve((stored.ID)(id))
 	if err != nil {
 		// handle storage error
 		ds.ServeError(http.StatusNotFound,
@@ -303,7 +303,13 @@ func (ds DataServer) DeleteData(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	ds.store.Delete((stored.ID)(id))
+	err := ds.store.Delete((stored.ID)(id))
+	if err != nil {
+		ds.ServeError(http.StatusInternalServerError,
+			"Error storing the object, "+err.Error(),
+			res, req)
+		return
+	}
 
 	res.WriteHeader(http.StatusNoContent)
 }
