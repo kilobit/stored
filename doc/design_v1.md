@@ -126,7 +126,7 @@ implementations will be provided allowing data to be stored in-memory,
 using the standard golang database driver or via a configurable remote
 REST api.
 
- -- Overview diagram goes here. --
+![System Components](system_components.png)
 
 Principles of the solution:
 
