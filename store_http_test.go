@@ -46,11 +46,13 @@ func (mt *mockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 func TestNewHttpStore(t *testing.T) {
 
+	hdrs := &http.Header{}
+	
 	hs := NewHttpStore(
-		SimpleStoreReq("PUT", "/", AppendIDURLFunc),
-		SimpleStoreReq("GET", "/", AppendIDURLFunc),
-		SimpleStoreReq("GET", "/", AppendIDURLFunc),
-		SimpleStoreReq("DELETE", "/", AppendIDURLFunc),
+		SimpleStoreReq("PUT", "/", AppendIDURLFunc, hdrs),
+		SimpleStoreReq("GET", "/", AppendIDURLFunc, hdrs),
+		SimpleStoreReq("GET", "/", AppendIDURLFunc, hdrs),
+		SimpleStoreReq("DELETE", "/", AppendIDURLFunc, hdrs),
 		StringMarshaler, StringUnmarshaler, StringIDUnmarshaler(","),
 		OptUseTransport(&mockTransport{}),
 	)

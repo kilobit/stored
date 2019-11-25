@@ -169,3 +169,48 @@ func TestWWW2CreateAndDelete(t *testing.T) {
 
 	assert.Expect(t, http.StatusNotFound, res.Code)
 }
+
+func TestWWW2HttpStoreClient(t *testing.T) {
+
+	ds := NewDataServer(
+		"/",
+		stored.NewMapStore(),
+		IncrIDGen(),
+		OptSetEncoder("text/plain", PlainStringEncoder),
+		OptSetDecoder("text/plain", PlainStringDecoder),
+		OptSetLogger(log.New(ioutil.Discard, "", log.Ldate)),
+	)
+
+	srv := httptest.NewServer(ds)
+
+	hdrs := &http.Header{}
+	hdrs.Add("Accept", "text/plain")
+	hdrs.Add("Content-Type", "text/plain")
+	
+	hs := stored.NewHttpStore(
+		stored.SimpleStoreReq("PUT", srv.URL + "/", stored.AppendIDURLFunc, hdrs),
+		stored.SimpleStoreReq("GET", srv.URL + "/", stored.AppendIDURLFunc, hdrs),
+		stored.SimpleStoreReq("GET", srv.URL + "/", stored.AppendIDURLFunc, hdrs),
+		stored.SimpleStoreReq("DELETE", srv.URL + "/", stored.AppendIDURLFunc, hdrs),
+		stored.StringMarshaler, stored.StringUnmarshaler,
+		stored.StringIDUnmarshaler(","),
+		stored.OptUseClient(srv.Client()),
+	)
+	
+	err := hs.StoreItem("1", "Hello World!")
+	if err != nil {
+		t.Error(err)
+	}
+
+	obj, err := hs.Retrieve("1", "")
+	if err != nil {
+		t.Error(err)
+	}
+
+	s, ok := obj.(string)
+	if !ok {
+		t.Errorf("Retrieved object is not a string.")
+	}
+	
+	assert.Expect(t, "Hello World!", s)
+}

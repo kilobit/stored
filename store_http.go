@@ -24,6 +24,12 @@ func NewHttpStoreError(msg string) HttpStoreError {
 
 type HttpStoreOpt func(*HttpStore)
 
+func OptUseClient(c *http.Client) HttpStoreOpt {
+	return func(h *HttpStore) {
+		h.c = c
+	}
+}
+
 func OptUseTransport(t http.RoundTripper) HttpStoreOpt {
 	return func(h *HttpStore) {
 		h.c.Transport = t
@@ -31,7 +37,7 @@ func OptUseTransport(t http.RoundTripper) HttpStoreOpt {
 }
 
 type HttpStoreReq func(ID) (*http.Request, error)
-type HttpStoreMarshaler func(Storable) (io.ReadCloser, error)
+type HttpStoreMarshaler func(Storable) (io.ReadCloser, int64, error)
 type HttpStoreUnmarshaler func(io.Reader) (Storable, error)
 type HttpStoreIDUnmarshaler func(io.Reader) ([]ID, error)
 
@@ -79,14 +85,14 @@ func (s *HttpStore) StoreItem(id ID, obj Storable) error {
 		return err
 	}
 
-	req.Body, err = s.marshal(obj)
+	req.Body, req.ContentLength, err = s.marshal(obj)
 
 	res, err := s.c.Do(req)
 	if err != nil {
 		return err
 	}
 
-	if res.StatusCode != http.StatusCreated {
+	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusNoContent {
 		return NewHttpStoreError("Failed response from server: " + http.StatusText(res.StatusCode))
 	}
 
@@ -166,7 +172,7 @@ func AppendIDURLFunc(base string, id ID) (*url.URL, error) {
 	return url.Parse(base + "/" + (string)(id))
 }
 
-func SimpleStoreReq(method, base string, urlf URLFunc) HttpStoreReq {
+func SimpleStoreReq(method, base string, urlf URLFunc, hdrs *http.Header) HttpStoreReq {
 	return func(id ID) (*http.Request, error) {
 
 		url, err := urlf(base, id)
@@ -177,17 +183,18 @@ func SimpleStoreReq(method, base string, urlf URLFunc) HttpStoreReq {
 		return &http.Request{
 			Method: method,
 			URL:    url,
+			Header: *hdrs,
 		}, nil
 	}
 }
 
-func StringMarshaler(obj Storable) (io.ReadCloser, error) {
+func StringMarshaler(obj Storable) (io.ReadCloser, int64, error) {
 	str, ok := obj.(string)
 	if !ok {
-		return nil, NewHttpStoreError("Expected the Storable to be a string.")
+		return nil, 0, NewHttpStoreError("Expected the Storable to be a string.")
 	}
 
-	return ioutil.NopCloser(strings.NewReader(str)), nil
+	return ioutil.NopCloser(strings.NewReader(str)), (int64)(len(str)), nil
 }
 
 func StringUnmarshaler(r io.Reader) (Storable, error) {
