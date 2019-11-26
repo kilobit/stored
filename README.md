@@ -35,11 +35,11 @@ from polishing.
 
 Consider this example system layout:
 
-![StorEd System Components](doc/system_components.png){ style="width: 100%" }
+<img src="doc/system_components.png" alt="Example StorEd Layout" style="width: 100%">
 
 In-Memory Storage:
 
-```
+``` go
 	ms := NewMapStore()
 	ms.StoreItem("1", "Hello World!")
 	obj, _ := ms.Retrieve("1")
@@ -49,7 +49,7 @@ In-Memory Storage:
 
 Custom REST storage client:
 
-```
+``` go
 	hs := NewHttpStore(
 		SimpleStoreReq("PUT", "/", AppendIDURLFunc),
 		SimpleStoreReq("GET", "/", AppendIDURLFunc),
@@ -71,7 +71,7 @@ Custom REST storage client:
 ```
 
 Custom REST storage service:
-```
+``` go
 	ds := NewDataServer(
 		"/test",
 		stored.NewMapStore(),
@@ -117,41 +117,41 @@ Custom REST storage service:
 Features
 --------
 
-- Store data objects by defining encoders and decoders or using
+- [X] Store data objects by defining encoders and decoders or using
   standard libraries.
-- Isolate domain and storage layers.
-- Swap storage back-ends at will.
-- Implement new storage connectors or back-ends at will.
-- Use the Go standard library interface definitions to add middleware
+- [X] Isolate domain and storage layers.
+- [X] Swap storage back-ends at will.
+- [X] Implement new storage connectors or back-ends at will.
+- [X] Use the Go standard library interface definitions to add middleware
   for authentication, encoders etc.
-- Use dependency injection to customize the behaviour of the stores.
-- Leverage a standard set of easy to set up components for In-Memory,
+- [X] Use dependency injection to customize the behaviour of the stores.
+- [X] Leverage a standard set of easy to set up components for In-Memory,
   WWW and soon DB Connectors.
 
 Upcoming:
 
-- Simplified Http* DI interfaces for clients and servers.
-- Implement a generic DB connector store.
-- Mix and match storage implementations.
+- [ ] Simplified Http* DI interfaces for clients and servers.
+- [ ] Implement a generic DB connector store.
+- [ ] Mix and match storage implementations.
 
 Issues
 ------
 
-- The current method for defining HTTP headers is cumbersome.
-- Some naming conventions, particularly for standard HTTP DI
+- [ ] The current method for defining HTTP headers is cumbersome.
+- [ ] Some naming conventions, particularly for standard HTTP DI
   components is unclear.
 
 Installation
 ------------
 
-```
+```shell
 $ go get 'kilobit.ca/go/stored'
 ```
 
 Building
 --------
 
-```
+```shell 
 $ cd stored
 $ go test -v
 $ go build
