@@ -35,7 +35,7 @@ from polishing.
 
 Consider this example system layout:
 
-<img src="doc/system_components.png" alt="Example StorEd Layout" style="width: 100%">
+<img src="doc/system_components.png" alt="Example StorEd Layout" style="width: 80%">
 
 In-Memory Storage:
 
