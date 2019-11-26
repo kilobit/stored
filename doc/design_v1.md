@@ -5,18 +5,16 @@ StorEd Data Repository
 Status: In-Development
 
 Authors:
-|--------------------|--------------------------------------------|----------------------------------------|
-| Name               | Contact                                    | Company                                |
-|--------------------|--------------------------------------------|----------------------------------------|
-| Christian Saunders | [cps@kilobit.ca] (mailto://cps@kilobit.ca) | [Kilobit Labs Inc.](http://kilobit.ca) |
-|--------------------|--------------------------------------------|----------------------------------------|
+
+ Name               | Contact                                    | Company                                
+--------------------|--------------------------------------------|----------------------------------------
+ Christian Saunders | [cps@kilobit.ca](mailto://cps@kilobit.ca)  | [Kilobit Labs Inc.](http://kilobit.ca) 
 
 Updates:
-|-------------|-------------------|--------------------|---------------------------|
-| Date        | Type              | Author(s)          | Description               |
-|-------------|-------------------|--------------------|---------------------------|
-| Nov 14, 201 | Document Creation | Christian Saunders | Initial document written. |
-|-------------|-------------------|--------------------|---------------------------|
+
+Date        | Type              | Author(s)          | Description               
+------------|-------------------|--------------------|---------------------------
+Nov 14, 201 | Document Creation | Christian Saunders | Initial document written. 
 
 Problem Description
 -------------------
@@ -67,23 +65,19 @@ Glossary
 Please refer to this list of terminology for the purposes of this
 design.
 
-Data 
-: Data is any information that can be encoded and stored in the
+- **Data** - Data is any information that can be encoded and stored in the
   running of an application.
 
-Encoding / Decoding
-: The process of representing a data object in some specified digital
+- **Encoding / Decoding** - The process of representing a data object in some specified digital
 format (e.g. JSON, urlencoded, csv, binary dump etc).
 
-Storage
-: The process of saving data for retrieval at a later time.
+- **Storage** - The process of saving data for retrieval at a later time.
 
-Storage Back-End
-: The final resting place of the bits representing some data.
+- **Storage Back-End** - The final resting place of the bits representing some data.
 
-Note that there may be multiple storage back-ends containing a data
-element or that the bits making up a data element may be stored across
-multiple back-ends.
+  Note that there may be multiple storage back-ends containing a data
+  element or that the bits making up a data element may be stored across
+  multiple back-ends.
 
 Requirements
 ------------
@@ -91,31 +85,29 @@ Requirements
 Consider RFC2119 in interpreting the following requirements.
 
 Functional:
-|------|-----------------------------------------------------------------------------------------------|
-| ID   | Description                                                                                   |
-|------|-----------------------------------------------------------------------------------------------|
-| FR1  | The system will provide a means of storing/retrieving data.                                   |
-| FR2  | The system should provide a means of deleting data.                                           |
-| FR3  | The system may provide a means of processing data.                                            |
-| FR4  | The system may provide addition data operations.                                              |
-| FR5  | The system will provide a means of determining supported operations for the current back end. |
-| FR6  | The system will provide an interface for arbitrary storage back-ends.                         |
-| FR7  | The system will provide a standard interface for encoding data.                               |
-| FR8  | The system will provide a standard interface for decoding data.                               |
-| FR9  | The system will provide an in-memory back-end store implementation.                           |
-| FR10 | The system will provide a HTTP based back-end store implementation.                           |
-|------|-----------------------------------------------------------------------------------------------|
+
+ID   | Description                                                                                   
+-----|-----------------------------------------------------------------------------------------------
+FR1  | The system will provide a means of storing/retrieving data.                                   
+FR2  | The system should provide a means of deleting data.                                           
+FR3  | The system may provide a means of processing data.                                            
+FR4  | The system may provide addition data operations.                                              
+FR5  | The system will provide a means of determining supported operations for the current back end. 
+FR6  | The system will provide an interface for arbitrary storage back-ends.                         
+FR7  | The system will provide a standard interface for encoding data.                               
+FR8  | The system will provide a standard interface for decoding data.                               
+FR9  | The system will provide an in-memory back-end store implementation.                          
+FR10 | The system will provide a HTTP based back-end store implementation.                           
 
 Non-Functional
-|-----|-------------|---------------------------------------------------------------------------------|
-| ID  | Type        | Description                                                                     |
-|-----|-------------|---------------------------------------------------------------------------------|
-| NR1 | Constraint  | The system will not impose any limitation on the type of the data being stored. |
-| NR2 | Constraint  | The application developer will be able to determine how domain data is encoded. |
-| NR3 | Constraint  | The back-end storage system will determine suitable data encoding.              |
-| NR4 | Performance | The system will not incur overhead beyond constant time and memory.             |
-| NR5 | Constraint  | Any store that can be instantiated will be supported.                           |
-|-----|-------------|---------------------------------------------------------------------------------|
+
+ID  | Type        | Description                                                                     
+----|-------------|---------------------------------------------------------------------------------
+NR1 | Constraint  | The system will not impose any limitation on the type of the data being stored. 
+NR2 | Constraint  | The application developer will be able to determine how domain data is encoded. 
+NR3 | Constraint  | The back-end storage system will determine suitable data encoding.              
+NR4 | Performance | The system will not incur overhead beyond constant time and memory.             
+NR5 | Constraint  | Any store that can be instantiated will be supported.                           
 
 Solution
 --------
